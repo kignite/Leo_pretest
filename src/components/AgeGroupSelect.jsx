@@ -3,16 +3,23 @@ import Alert from "./Alert";
 import { CommonSelect, DecorationText, Wrapper } from "../css/common";
 
 export default function AgeGroupSelect(props) {
-  const { index, ageGroup, updateAgeGroup, isAgeOverLap, getNumberIntervals } =
-    props;
+  const {
+    index,
+    ageGroup,
+    updateAgeGroup,
+    isAgeOverLap,
+    getNumberIntervals,
+    minAge,
+    maxAge,
+  } = props;
   const [ages, setAges] = useState(ageGroup);
   const [error, setError] = useState(null);
-  const [selectStartAge, setStartSelectAge] = useState(0);
-  const [selectEndAge, setSelectEndAge] = useState(20);
+  const [selectStartAge, setStartSelectAge] = useState(minAge);
+  const [selectEndAge, setSelectEndAge] = useState(maxAge);
 
   const [numberIntervals, setNumberIntervals] = useState({
-    startAgeArr: Array.from({ length: 21 }, (_, index) => index),
-    endAgeArr: Array.from({ length: 21 }, (_, index) => index),
+    startAgeArr: Array.from({ length: maxAge + 1 }, (_, index) => index),
+    endAgeArr: Array.from({ length: maxAge + 1 }, (_, index) => index),
   });
 
   const handleSelectChange = (e, position) => {
@@ -35,8 +42,8 @@ export default function AgeGroupSelect(props) {
   };
 
   const handleAgeCanSelect = (startAge, endAge) => {
-    let startAgeRange = [0, endAge];
-    let endAgeRange = [startAge, 20];
+    let startAgeRange = [minAge, endAge];
+    let endAgeRange = [startAge, maxAge];
 
     const startAgeArr = Array.from(
       { length: startAgeRange[1] - startAgeRange[0] + 1 },

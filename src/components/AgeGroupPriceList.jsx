@@ -9,16 +9,19 @@ import {
 } from "../css/common";
 
 export default function AgeGroupPriceList(props) {
-  const { propsOnChange } = props;
+  const { propsOnChange, maxAge, minAge } = props;
   const [ageGroups, setAgeGroups] = useState([
-    { id: 0, ageGroup: [0, 20], price: null },
+    { id: 0, ageGroup: [minAge, maxAge], price: null },
   ]);
   const [isAgeOverLap, setIsAgeOverLap] = useState(false);
   const [isDisableAdd, setIsDisableAdd] = useState(false);
 
   const addAgeGroup = () => {
     const newId = ageGroups.length;
-    setAgeGroups([...ageGroups, { id: newId, ageGroup: [0, 20], price: null }]);
+    setAgeGroups([
+      ...ageGroups,
+      { id: newId, ageGroup: [minAge, maxAge], price: null },
+    ]);
   };
 
   const removeAgeGroup = (id) => {
@@ -91,7 +94,7 @@ export default function AgeGroupPriceList(props) {
 
     // 遍歷 0 到 20 的所有數字，找出未包含的數字區間
     let min = null;
-    for (let i = 0; i <= 20; i++) {
+    for (let i = minAge; i <= maxAge; i++) {
       if (allNumbers.has(i)) {
         if (min !== null) {
           output.push([min, i - 1]);
@@ -106,7 +109,7 @@ export default function AgeGroupPriceList(props) {
 
     // 添加最後一個未包含的數字區間（如果有的話）
     if (min !== null) {
-      output.push([min, 20]);
+      output.push([min, maxAge]);
     }
 
     return output;
@@ -177,6 +180,8 @@ export default function AgeGroupPriceList(props) {
             </RemoveBtn>
           )}
           <AgeGroup
+            minAge={minAge}
+            maxAge={maxAge}
             key={group.id}
             index={index}
             ageGroup={group.ageGroup}

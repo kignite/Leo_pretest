@@ -5,8 +5,7 @@ import { CommonSelect, DecorationText, Wrapper } from "../css/common";
 export default function AgeGroupSelect(props) {
   const { index, ageGroup, updateAgeGroup, isAgeOverLap, getNumberIntervals } =
     props;
-  const originArr = Array.from({ length: 21 }, (_, index) => index);
-  const [ages, setAges] = useState(ageGroup || [0, 20]);
+  const [ages, setAges] = useState(ageGroup);
   const [error, setError] = useState(null);
   const [selectStartAge, setStartSelectAge] = useState(0);
   const [selectEndAge, setSelectEndAge] = useState(20);
@@ -14,18 +13,12 @@ export default function AgeGroupSelect(props) {
   const [numberIntervals, setNumberIntervals] = useState({
     startAgeArr: Array.from({ length: 21 }, (_, index) => index),
     endAgeArr: Array.from({ length: 21 }, (_, index) => index),
-    overlap: [],
-    notInclude: originArr,
   });
 
-  const handleSelectChange = (ageIndex, e, position) => {
+  const handleSelectChange = (e, position) => {
     const { value } = e.target;
     const newAges = [...ages];
-    newAges[ageIndex] = value !== "" ? parseInt(value) : null;
-
-    setAges(newAges);
-
-    updateAgeGroup(index, { ageGroup: newAges });
+    let ageIndex = position === "start" ? 0 : 1;
 
     if (position === "start") {
       setStartSelectAge(value);
@@ -35,6 +28,10 @@ export default function AgeGroupSelect(props) {
       setSelectEndAge(value);
       handleAgeCanSelect(numberIntervals.endAgeArr[0], parseInt(value));
     }
+
+    newAges[ageIndex] = value !== "" ? parseInt(value) : null;
+    setAges(newAges);
+    updateAgeGroup(index, { ageGroup: newAges });
   };
 
   const handleAgeCanSelect = (startAge, endAge) => {
@@ -55,16 +52,12 @@ export default function AgeGroupSelect(props) {
 
   const validation = () => {
     setError(null);
-
     getNumberIntervals();
+
     if (isAgeOverLap) {
       setError("年齡區段不可重疊");
     }
   };
-
-  // useEffect(() => {
-  //   handleAgeCanSelect(0, 20);
-  // }, []);
 
   useEffect(() => {
     validation();
@@ -78,12 +71,16 @@ export default function AgeGroupSelect(props) {
       <Wrapper $margin={"20px 0 0 0"}>
         <CommonSelect
           $borderRadius={"5px 0 0 5px"}
-          onChange={(e) => handleSelectChange(0, e, "start")}
+          onChange={(e) => handleSelectChange(e, "start")}
           value={selectStartAge}
           defaultValue={selectStartAge}
         >
           {numberIntervals?.startAgeArr.map((age) => {
-            return <option value={age}>{age}</option>;
+            return (
+              <option key={age} value={age}>
+                {age}
+              </option>
+            );
           })}
         </CommonSelect>
         <DecorationText
@@ -98,12 +95,16 @@ export default function AgeGroupSelect(props) {
         </DecorationText>
         <CommonSelect
           $borderRadius={"0 5px 5px 0"}
-          onChange={(e) => handleSelectChange(1, e, "end")}
+          onChange={(e) => handleSelectChange(e, "end")}
           value={selectEndAge}
           defaultValue={selectEndAge}
         >
           {numberIntervals?.endAgeArr.map((age) => {
-            return <option value={age}>{age}</option>;
+            return (
+              <option key={age} value={age}>
+                {age}
+              </option>
+            );
           })}
         </CommonSelect>
       </Wrapper>

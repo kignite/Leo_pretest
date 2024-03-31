@@ -8,16 +8,13 @@ import {
   Wrapper,
 } from "../css/common";
 
-export default function AgeGroupPriceList() {
+export default function AgeGroupPriceList(props) {
+  const { propsOnChange } = props;
   const [ageGroups, setAgeGroups] = useState([
     { id: 0, ageGroup: [0, 20], price: null },
   ]);
   const [isAgeOverLap, setIsAgeOverLap] = useState(false);
   const [isDisableAdd, setIsDisableAdd] = useState(false);
-
-  const showThePropsOnChange = (results) => {
-    return results.map(({ id, ...result }) => result);
-  };
 
   const addAgeGroup = () => {
     const newId = ageGroups.length;
@@ -38,7 +35,12 @@ export default function AgeGroupPriceList() {
     updatedAgeGroups[index] = { ...updatedAgeGroups[index], ...newData };
     setAgeGroups(updatedAgeGroups);
 
-    console.log(showThePropsOnChange(updatedAgeGroups));
+    // to show the result
+    console.log(propsOnChange(updatedAgeGroups, showThePropsOnChange));
+  };
+
+  const showThePropsOnChange = (results) => {
+    return results.map(({ id, ...result }) => result);
   };
 
   const getNumberIntervals = () => {
@@ -79,10 +81,10 @@ export default function AgeGroupPriceList() {
     return { overlap, notInclude };
   };
 
-  //func handleNotIncludeIntervals
-  //[[5,8],[6,11],[7,7],[14,17],[17,20]]=>
-  //[0,1,2,3,4,12,13] =>
-  //[[0,4],[12,13]]
+  //func handleNotIncludeIntervals except step
+  //[[5, 8], [6, 11], [7, 7], [14, 17], [17, 20]]=>
+  //[0, 1, 2, 3, 4, 12, 13] =>
+  //[[0, 4], [12, 13]]
 
   const handleNotIncludeIntervals = (intervals) => {
     let output = [];
@@ -120,9 +122,9 @@ export default function AgeGroupPriceList() {
     return output;
   };
 
-  // func mergeIntervals
-  // [ [ 6, 8 ], [ 7, 7 ], [ 17, 17 ] ] =>
-  // [[6,8], [17,17]]
+  // func mergeIntervals except step
+  // [[6, 8], [7, 7], [17, 17]] =>
+  // [[6, 8], [17, 17]]
   const mergeIntervals = (intervals) => {
     if (intervals.length <= 1) {
       return intervals;
@@ -158,6 +160,7 @@ export default function AgeGroupPriceList() {
           $direction={"column"}
           $position={"relative"}
           $width={"100%"}
+          key={group.id}
         >
           {ageGroups.length > 1 && index !== 0 && (
             <RemoveBtn onClick={() => removeAgeGroup(group.id)}>

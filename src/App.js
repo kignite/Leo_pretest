@@ -1,9 +1,12 @@
 import AgeGroupPriceList from './components/AgeGroupPriceList';
 
 function App() {
+  const propsOnChange = (result, dataTransfer) => {
+    return dataTransfer(result)
+  }
   return (
     <div>
-      <AgeGroupPriceList />
+      <AgeGroupPriceList propsOnChange={propsOnChange} />
     </div>
   );
 }

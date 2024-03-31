@@ -18,8 +18,11 @@ export default function AgeGroupSelect(props) {
   const [selectEndAge, setSelectEndAge] = useState(maxAge);
 
   const [numberIntervals, setNumberIntervals] = useState({
-    startAgeArr: Array.from({ length: maxAge + 1 }, (_, index) => index),
-    endAgeArr: Array.from({ length: maxAge + 1 }, (_, index) => index),
+    startAgeArr: Array.from(
+      { length: maxAge - minAge + 1 },
+      (_, index) => index
+    ),
+    endAgeArr: Array.from({ length: maxAge - minAge + 1 }, (_, index) => index),
   });
 
   const handleSelectChange = (e, position) => {

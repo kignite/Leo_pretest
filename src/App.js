@@ -6,7 +6,7 @@ function App() {
   }
   return (
     <div>
-      <AgeGroupPriceList propsOnChange={propsOnChange} />
+      <AgeGroupPriceList propsOnChange={propsOnChange} minAge={0} maxAge={20} />
     </div>
   );
 }

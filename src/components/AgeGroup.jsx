@@ -10,6 +10,8 @@ export default function AgeGroup(props) {
     updateAgeGroup,
     isAgeOverLap,
     getNumberIntervals,
+    minAge,
+    maxAge,
   } = props;
   return (
     <>
@@ -26,6 +28,8 @@ export default function AgeGroup(props) {
           updateAgeGroup={updateAgeGroup}
           isAgeOverLap={isAgeOverLap}
           getNumberIntervals={getNumberIntervals}
+          minAge={minAge}
+          maxAge={maxAge}
         />
         <PriceInput
           index={index}

@@ -53,17 +53,7 @@ export default function AgeGroupPriceList(props) {
 
     rangesArr.sort((a, b) => a[0] - b[0]);
 
-    const overlapOrigin = [];
-
-    for (let i = 0; i < rangesArr.length - 1; i++) {
-      const [start1, end1] = rangesArr[i];
-      const [start2, end2] = rangesArr[i + 1];
-      if (end1 >= start2) {
-        overlapOrigin.push([start2, Math.min(end1, end2)]);
-      }
-    }
-
-    const overlap = mergeIntervals(overlapOrigin);
+    const overlap = mergeIntervals(handleOverlapIntervals(rangesArr));
     const notInclude = handleNotIncludeIntervals(rangesArr);
 
     if (overlap.length > 0) {
@@ -81,12 +71,12 @@ export default function AgeGroupPriceList(props) {
     return { overlap, notInclude };
   };
 
-  //func handleNotIncludeIntervals except step
-  //[[5, 8], [6, 11], [7, 7], [14, 17], [17, 20]]=>
-  //[0, 1, 2, 3, 4, 12, 13] =>
-  //[[0, 4], [12, 13]]
-
   const handleNotIncludeIntervals = (intervals) => {
+    //except step
+    //[[5, 8], [6, 11], [7, 7], [14, 17], [17, 20]]=>
+    //[0, 1, 2, 3, 4, 12, 13] =>
+    //[[0, 4], [12, 13]]
+
     let output = [];
     let allNumbers = new Set();
 
@@ -122,10 +112,29 @@ export default function AgeGroupPriceList(props) {
     return output;
   };
 
-  // func mergeIntervals except step
-  // [[6, 8], [7, 7], [17, 17]] =>
-  // [[6, 8], [17, 17]]
+  const handleOverlapIntervals = (intervals) => {
+    //except step
+    //[[5, 8], [6, 11], [7, 7], [14, 17], [17, 20]]=>
+    //[[6, 8], [7,7], [17,17]]
+
+    const overlapIntervals = [];
+
+    for (let i = 0; i < intervals.length - 1; i++) {
+      const [start1, end1] = intervals[i];
+      const [start2, end2] = intervals[i + 1];
+      if (end1 >= start2) {
+        overlapIntervals.push([start2, Math.min(end1, end2)]);
+      }
+    }
+
+    return overlapIntervals;
+  };
+
   const mergeIntervals = (intervals) => {
+    // except step
+    // [[6, 8], [7, 7], [17, 17]] =>
+    // [[6, 8], [17, 17]]
+
     if (intervals.length <= 1) {
       return intervals;
     }

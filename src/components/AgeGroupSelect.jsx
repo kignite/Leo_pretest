@@ -68,7 +68,7 @@ export default function AgeGroupSelect(props) {
     getNumberIntervals();
 
     if (isAgeOverLap) {
-      setError("年齡區段不可重疊");
+      setError("年齡區間不可重疊");
     }
   };
 

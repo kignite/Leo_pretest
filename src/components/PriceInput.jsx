@@ -7,18 +7,23 @@ const currency = "TWD";
 export default function PriceInput(props) {
   const { index, price, updateAgeGroup } = props;
   const [num, setNum] = useState(price || "");
+  const [typingTimeout, setTypingTimeout] = useState(null);
 
   const handleInputChange = (e) => {
     const { value } = e.target;
     const strippedValue = value.replace(/[^0-9.-]|(?<=.)-/g, "");
-
-    updateAgeGroup(index, { price: parseFloat(strippedValue) });
-
     const parts = strippedValue.split(".");
     const integerPart = addComma(parts[0]);
     const formattedValue =
       parts.length > 1 ? integerPart + "." + parts[1] : integerPart;
     setNum(formattedValue);
+
+    // Debounce
+    clearTimeout(typingTimeout);
+    const newTimeout = setTimeout(() => {
+      updateAgeGroup(index, { price: parseFloat(strippedValue) });
+    }, 500);
+    setTypingTimeout(newTimeout);
   };
 
   const addComma = (num) => {
@@ -51,7 +56,7 @@ export default function PriceInput(props) {
         ></CommonInput>
       </Wrapper>
       {num.length === 0 && (
-        <Alert error={"不可以空白"} hint={"輸入 0 表示免費"} />
+        <Alert error={"不可以為空白"} hint={"輸入 0 表示免費"} />
       )}
     </Wrapper>
   );
